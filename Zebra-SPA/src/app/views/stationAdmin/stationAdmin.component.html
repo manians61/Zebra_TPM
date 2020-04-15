@@ -1,0 +1,47 @@
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="app-body ">
+  <main class="main d-flex align-items-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 mx-auto">
+          <div class="card mx-4" style="width: 100%;">
+            <div class="card-body p-4">
+              <form [formGroup]="stationForm">
+                <h2 class="text-center text-primary">Zebra Station Admin</h2>
+                <hr>
+                <div class="form-group">
+                  <select class="custom-select" (change)="changeStation($event)" formControlName="station_ID">
+                    <option value="">Choose your Station</option>
+                    <option *ngFor="let item of stations" value = "{{item.station_ID}}" [ngValue]="station_ID">{{item.station_Name}}</option>
+                  </select>
+                  <div class="invalid-feedback" *ngIf="isSubmitted && station_ID.errors?.required">
+                    <sup>*</sup>Please Select your Station
+                  </div>
+                </div>
+                <div class="form-group">
+                  <strong>Station Status:</strong>
+                  <select class="select-css" formControlName="isClose">
+                    <option [ngValue]="true">Open</option>
+                    <option [ngValue]="false" selected>Close</option>
+                  </select>
+                </div>
+                <div class="form-group text-center">
+                  <button class="btn btn-success" type="submit" 
+                    (click)="submitChange()">Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

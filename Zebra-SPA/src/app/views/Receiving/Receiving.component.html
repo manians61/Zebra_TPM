@@ -1,0 +1,60 @@
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="app-body ">
+  <main class="main d-flex align-items-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 mx-auto">
+          <div class="card mx-4" style="width: 100%;">
+            <div class="card-body p-4">
+              <form [formGroup]="receivingForm">
+                <h2 class="text-center text-primary">RMA Receiving</h2>
+                <hr>
+
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-lg-10">
+                      <input type="text" class="form-control"
+                        [ngClass]="{'is-invalid': receivingForm.get('rmano').errors && receivingForm.get('rmano').touched}"
+                        formControlName="rmano" placeholder="RMA No." required>
+                    </div>
+                    <div class="col-lg-2">
+                      <button class="btn btn-success" type="submit" style="width: 100%;" (click)="rmaInfo()">Enter</button>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="form-group" *ngIf="isSearch">
+                  <select class="select-css" formControlName="pn">
+                    <option *ngFor="let item of rmaList" [ngValue]="item.pn">
+                      {{item.pn}}
+                    </option>
+                  </select>
+                </div>
+                <div class="form-group" *ngIf="isSearch">
+                  <input [ngClass]="{'is-invalid': receivingForm.get('receive_QTY').errors && receivingForm.get('receive_QTY').touched}"
+                    class="form-control" placeholder="Qty" formControlName="receive_QTY" required>
+                </div>
+                <div class="form-group" *ngIf="isSearch">
+                  <input
+                    [ngClass]="{'is-invalid': receivingForm.get('tray_ID').errors && receivingForm.get('tray_ID').touched}"
+                    class="form-control" placeholder="Tray ID." formControlName="tray_ID" required>
+                </div>
+
+                <div class="form-group text-center" *ngIf="isSearch">
+                  <button class="btn btn-success" type="submit" [disabled]="!receivingForm.valid" (click)="addRma()">Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

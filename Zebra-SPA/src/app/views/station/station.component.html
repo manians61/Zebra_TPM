@@ -1,0 +1,48 @@
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="app-body ">
+  <main class="main d-flex align-items-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 mx-auto">
+          <div class="card mx-4" style="width: 100%;">
+            <div class="card-body p-4">
+              <div class="row custom-wrapper">
+                <div class="col-md-12">
+
+                  <!-- Form starts -->
+                  <form [formGroup]="stationForm" (ngSubmit)="submitStation()">
+                    <div class="group-gap">
+                      <div class="d-block my-3">
+
+                        <div class="mb-3">
+                          <select class="custom-select" (change)="changeStation($event)" formControlName="station_ID">
+                            <option value="">Choose your Station</option>
+                            <option *ngFor="let item of stations" value = "{{item.station_ID}}" [ngValue]="station_ID">{{item.station_Name}}</option>
+                          </select>
+                          <div class="invalid-feedback" *ngIf="isSubmitted && station_ID.errors?.required">
+                            <sup>*</sup>Please Select your Station
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-danger btn-lg btn-block">Submit</button>
+                  </form><!-- Form ends -->
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
