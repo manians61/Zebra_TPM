@@ -1365,11 +1365,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\Projects\\AccessControl\\AccessControl.API\\AccessControl.API.csproj",
+      "projectUniqueName": "D:\\Projects\\Zebra_TPM\\AccessControl.API\\AccessControl.API.csproj",
       "projectName": "AccessControl.API",
-      "projectPath": "d:\\Projects\\AccessControl\\AccessControl.API\\AccessControl.API.csproj",
+      "projectPath": "D:\\Projects\\Zebra_TPM\\AccessControl.API\\AccessControl.API.csproj",
       "packagesPath": "C:\\Users\\maton\\.nuget\\packages\\",
-      "outputPath": "d:\\Projects\\AccessControl\\AccessControl.API\\obj\\",
+      "outputPath": "D:\\Projects\\Zebra_TPM\\AccessControl.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

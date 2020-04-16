@@ -23,7 +23,7 @@ export class StationComponent implements OnInit {
   stationUser: ZebraUser = {};
   model: any = {};
   constructor(private zebraService: ZebraService, private fb: FormBuilder,
-    private alertify: AlertifyService, private http: HttpClient, private router: Router,private userService: UserService) { }
+    private alertify: AlertifyService, private http: HttpClient, private router: Router, private userService: UserService) { }
 
   ngOnInit() {
     this.createStationForm();
@@ -42,7 +42,7 @@ export class StationComponent implements OnInit {
   createStationForm() {
     this.stationForm = this.fb.group({
       station_ID: ['', Validators.required],
-      isClose:[false]
+      isClose: [false]
     });
 
 

@@ -25,9 +25,7 @@
                             <option value="">Choose your Station</option>
                             <option *ngFor="let item of stations" value = "{{item.station_ID}}" [ngValue]="station_ID">{{item.station_Name}}</option>
                           </select>
-                          <div class="invalid-feedback" *ngIf="isSubmitted && station_ID.errors?.required">
-                            <sup>*</sup>Please Select your Station
-                          </div>
+          
                         </div>
 
                       </div>

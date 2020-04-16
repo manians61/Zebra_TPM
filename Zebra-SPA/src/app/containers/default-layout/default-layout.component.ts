@@ -22,13 +22,14 @@ export class DefaultLayoutComponent implements OnInit {
   loginType = ['Local', 'Domain', 'MyService'];
   public sidebarMinimized = false;
   public navItems = navItems;
-  constructor(private authService: AuthService, private alertify: AlertifyService,
+  constructor(public authService: AuthService, private alertify: AlertifyService,
     private router: Router, private fb: FormBuilder, private userService: UserService) { }
   ngOnInit(): void {
-    this.checkPermission();
+
     this.createLoginForm();
     if (this.authService.loggedIn()) {
       this.router.navigate(['station']);
+      this.checkPermission();
     }
 
 
@@ -37,19 +38,6 @@ export class DefaultLayoutComponent implements OnInit {
     this.sidebarMinimized = e;
   }
 
-  login() {
-    this.model = Object.assign({}, this.loginForm.value);
-    this.authService.login(this.model).subscribe(
-      next => {
-        this.alertify.success('Log in Successfully');
-      },
-      error => {
-        this.alertify.error('Username or Password has error!');
-      }, () => {
-        this.router.navigate(['station']);
-      }
-    );
-  }
   createLoginForm() {
     this.loginForm = this.fb.group({
       user_ID: ['', Validators.required],

@@ -13,22 +13,9 @@ import { StationComponent } from './views/station/station.component';
 import { StationDetailComponent } from './views/StationDetail/StationDetail.component';
 import { ZebraAdminComponent } from './views/zebraAdmin/zebraAdmin.component';
 import { StationAdminComponent } from './views/stationAdmin/stationAdmin.component';
+import { AuthGuard } from '../../_guard/auth.guard';
 
 export const routes: Routes = [
-  {
-    path: '404',
-    component: P404Component,
-    data: {
-      title: 'Page 404'
-    }
-  },
-  {
-    path: '500',
-    component: P500Component,
-    data: {
-      title: 'Page 500'
-    }
-  },
   {
     path: 'login',
     component: LoginComponent,
@@ -45,6 +32,8 @@ export const routes: Routes = [
   },
   {
     path: '',
+    runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
     component: DefaultLayoutComponent,
     data: {
       title: 'Home'

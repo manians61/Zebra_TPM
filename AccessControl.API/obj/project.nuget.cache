@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "fSpfYDzW/ZrnbkUgT+p5nqXXVh1zZ9NTgbW3FXcg1hD54TfLP3l71J3J9qllV/bo9KZvKS0qP6XN8CKQf6LeDQ==",
+  "dgSpecHash": "QSkameAwfaTqiFf90StySLiIgrEcoEp47HD13taipac7PDLnccGQ4ruu4zKG725s39+1eJCID/5g6tmBYGqYsA==",
   "success": true,
-  "projectFilePath": "D:\\Projects\\AccessControl\\AccessControl.API\\AccessControl.API.csproj",
+  "projectFilePath": "D:\\Projects\\Zebra_TPM\\AccessControl.API\\AccessControl.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\maton\\.nuget\\packages\\automapper\\9.0.0\\automapper.9.0.0.nupkg.sha512",
     "C:\\Users\\maton\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\7.0.0\\automapper.extensions.microsoft.dependencyinjection.7.0.0.nupkg.sha512",

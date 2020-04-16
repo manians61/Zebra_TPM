@@ -52,6 +52,7 @@ import { StationComponent } from './views/station/station.component';
 import { StationDetailComponent } from './views/StationDetail/StationDetail.component';
 import { ZebraAdminComponent } from './views/zebraAdmin/zebraAdmin.component';
 import { StationAdminComponent } from './views/stationAdmin/stationAdmin.component';
+import { AuthGuard } from '../../_guard/auth.guard';
 
 export function tokenGetterFunc() {
   return localStorage.getItem('token');
@@ -101,7 +102,9 @@ export function tokenGetterFunc() {
   },
   AuthService,
   AlertifyService,
-  UserService],
+  AuthGuard,
+  UserService,
+  ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }
