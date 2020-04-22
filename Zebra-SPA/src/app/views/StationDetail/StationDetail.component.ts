@@ -18,6 +18,7 @@ export class StationDetailComponent implements OnInit {
   currentTrayDetail: ZebraTray;
   reAssignTrayDetail: ZebraTray = {};
   currentUser: User;
+  isClick = false;
   isSearch = false;
   isPacking = false;
   isLightOn = false;
@@ -50,14 +51,18 @@ export class StationDetailComponent implements OnInit {
   getTrayInfo() {
     this.zebraService.getTrayInfo(this.stationDetailForm.get('tray_ID').value).subscribe((res: ZebraTray) => {
       this.currentTrayDetail = res;
-
       this.currentTrayDetail.lastModifyBy = this.currentUser.user_ID;
+      console.log(this.currentTrayDetail);
       if (this.currentTrayDetail.isEmpty) {
         this.alertify.error('This tray is empty!');
       } else {
-        this.isSearch = true;
-        this.stationDetailForm.controls.qty.setValue(this.currentTrayDetail.tray_Item_Count.toString());
-        this.stationDetailForm.controls.pass_qty.setValue(this.currentTrayDetail.current_Item_Count.toString());
+        if (this.currentTrayDetail.current_Station_ID !== this.currentStation.station_ID) {
+          this.alertify.error('This tray is in station: ' + this.currentTrayDetail.station_Name);
+        } else {
+          this.isSearch = true;
+          this.stationDetailForm.controls.qty.setValue(this.currentTrayDetail.tray_Item_Count.toString());
+          this.stationDetailForm.controls.pass_qty.setValue(this.currentTrayDetail.current_Item_Count.toString());
+        }
       }
     }, error => {
       this.isSearch = false;
@@ -87,8 +92,9 @@ export class StationDetailComponent implements OnInit {
         (this.currentTrayDetail.tray_Item_Count - this.currentTrayDetail.scrap_Count < 0)) {
 
         this.alertify.error('Scrap Qty greater than qty in current tray');
-      } else if (this.currentTrayDetail.tray_Item_Count - this.currentTrayDetail.scrap_Count === 0) {
+      } else if (this.currentTrayDetail.tray_Item_Count === this.currentTrayDetail.scrap_Count) {
         this.currentTrayDetail.isEmpty = true;
+        console.log(this.currentTrayDetail);
         this.zebraService.updateTrayDetail(this.currentTrayDetail).subscribe(next => {
           this.alertify.success('Tray close');
         });
@@ -100,23 +106,27 @@ export class StationDetailComponent implements OnInit {
           this.reAssignTrayDetail.current_Item_Count = 0;
           this.reAssignTrayDetail.scrap_Count = 0;
           this.reAssignTrayDetail.current_Station_ID = 1;
-          this.reAssignTrayDetail.tray_Item_Count = this.stationDetailForm.get('reassign_Qty').value;
+          this.reAssignTrayDetail.next_Station_ID = 1;
+          this.reAssignTrayDetail.tray_Item_Count = this.stationDetailForm.get('scrap_Qty').value;
           this.reAssignTrayDetail.rma_No = this.currentTrayDetail.rma_No;
           this.reAssignTrayDetail.pn = this.currentTrayDetail.pn;
           this.reAssignTrayDetail.isEmpty = false;
-          this.reAssignTrayDetail.station_Name = this.currentStation.station_Name + '-ReAssign';
+          this.reAssignTrayDetail.station_Name = 'Re-Assign';
           this.reAssignTrayDetail.lastModifyBy = this.currentUser.user_ID;
-          this.currentTrayDetail.tray_Item_Count = this.currentTrayDetail.tray_Item_Count - this.reAssignTrayDetail.tray_Item_Count;
-          if (this.currentTrayDetail.current_Item_Count - this.reAssignTrayDetail.tray_Item_Count < 0) {
+          console.log(this.currentTrayDetail);
+          console.log(this.reAssignTrayDetail);
+          if ((this.currentTrayDetail.tray_Item_Count - this.currentTrayDetail.scrap_Count) - this.reAssignTrayDetail.tray_Item_Count < 0) {
             this.alertify.error('Re-Assign qty is over current item qty: ' + this.currentTrayDetail.current_Item_Count + 'in tray');
           } else if (this.currentTrayDetail.current_Item_Count - this.reAssignTrayDetail.tray_Item_Count === 0) {
             this.currentTrayDetail.isEmpty = true;
+          } else {
+            this.zebraService.updateTrayDetail(this.reAssignTrayDetail).subscribe(next => {
+              this.alertify.success('Re-Assign Success!');
+            }, error => {
+              this.alertify.error('Failed! Please Contact Dev Team!!');
+            });
           }
-          this.zebraService.updateTrayDetail(this.reAssignTrayDetail).subscribe(next => {
-            this.alertify.success('Re-Assign Success!');
-          }, error => {
-            this.alertify.error('Failed! Please Contact Dev Team!!');
-          });
+
         }
         this.zebraService.updateTrayDetail(this.currentTrayDetail).subscribe(next => {
           this.alertify.success('Success!');
@@ -124,8 +134,10 @@ export class StationDetailComponent implements OnInit {
         }, error => {
           this.alertify.error('Failed! Please Contact Dev Team!!');
         });
+        
         this.stationDetailForm.reset();
         this.isSearch = false;
+        this.isClick = true;
       }
     }
 

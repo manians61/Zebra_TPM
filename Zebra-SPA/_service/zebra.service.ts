@@ -41,4 +41,7 @@ export class ZebraService {
   updateStation(station: ZebraStation) {
     return this.http.post(this.baseUrl + 'updateStation', station);
   }
+  getAvaliableTrayID(): Observable<string[]> {
+    return this.http.get<string[]>(this.baseUrl + 'AvailableTray/');
+  }
 }

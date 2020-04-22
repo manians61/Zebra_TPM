@@ -84,7 +84,7 @@ namespace AccessControl.API.ZebraControllers
         {
             try
             {
-                if (detail.IsEmpty || (detail.Tray_Item_Count - detail.Scrap_Count <= 0))
+                if (detail.IsEmpty || (detail.Tray_Item_Count - detail.Scrap_Count <= 0) || detail.Next_Station_ID.ToString() == null)
                 {
                     detail.IsEmpty = true;
                     detail.Scrap_Count = 0;
@@ -139,7 +139,8 @@ namespace AccessControl.API.ZebraControllers
         [Route("tray/{id}")]
         public async Task<IActionResult> GetTray(string id)
         {
-            var itemFromRepo = await _repo.GetTrayDetail(id);
+     
+            var itemFromRepo = await _repo.GetTrayDetail(id.ToUpper());
 
             if (itemFromRepo != null)
             {

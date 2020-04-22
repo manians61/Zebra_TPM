@@ -23,11 +23,14 @@ export class ReceivingComponent implements OnInit {
   trayForUpdate: ZebraTray = {};
   isSearch = false;
   currentStation: ZebraStation = {};
+  id: ZebraTray = {};
+  isExist = false;
 
   ngOnInit() {
     this.createReceivingForm();
     this.currentStation = JSON.parse(localStorage.getItem('userStation'));
     this.currentUser = JSON.parse(localStorage.getItem('user'));
+
   }
 
   createReceivingForm() {
@@ -35,7 +38,7 @@ export class ReceivingComponent implements OnInit {
       rmano: ['', Validators.required],
       pn: ['', Validators.required],
       receive_QTY: ['', Validators.required],
-      tray_ID: ['', Validators.required]
+      tray_ID: [' ', Validators.required]
     });
   }
 
@@ -51,26 +54,41 @@ export class ReceivingComponent implements OnInit {
   addRma() {
     this.rmaForAdd = Object.assign({}, this.receivingForm.value);
     this.rmaForAdd.createBy = this.currentUser.user_ID;
-    this.zebraService.addRmaInfo(this.rmaForAdd).subscribe(next => {
-      this.alertify.success('Add Successfully!');
+    this.zebraService.getTrayInfo(this.rmaForAdd.tray_ID).subscribe((res: ZebraTray) => {
+      this.id = res;
+      if (this.id.isEmpty === false) {
+        this.alertify.error('This Tray is not empty');
+      } else {
+        this.isExist = true;
+      }
     }, error => {
-      this.alertify.error('Add Failed!!');
+      this.alertify.error('Tray is not exist, Please enter correct tray ID');
     });
-    this.trayForUpdate.lastModifyBy = this.currentUser.user_ID;
-    this.trayForUpdate.isEmpty = false;
-    this.trayForUpdate.tray_ID = this.rmaForAdd.tray_ID;
-    this.trayForUpdate.tray_Item_Count = this.receivingForm.get('receive_QTY').value;
-    this.trayForUpdate.scrap_Count = 0;
-    this.trayForUpdate.current_Station_ID = 0;
-    this.trayForUpdate.station_Name = this.currentStation.station_Name;
-    this.trayForUpdate.pn = this.rmaForAdd.pn;
-    this.trayForUpdate.rma_No = this.rmaForAdd.rmano;
-    this.zebraService.updateTrayDetail(this.trayForUpdate).subscribe(next => {
-    }, error => {
-      this.alertify.error('Assign items to tray failed!');
-    });
-    this.receivingForm.reset();
-    this.isSearch = false;
+    if (this.isExist) {
+      this.zebraService.addRmaInfo(this.rmaForAdd).subscribe(() => {
+        this.alertify.success('Add Successfully!');
+      }, error => {
+        this.alertify.error('Add Failed!!');
+      });
+      this.trayForUpdate.lastModifyBy = this.currentUser.user_ID;
+      this.trayForUpdate.isEmpty = false;
+      this.trayForUpdate.tray_ID = this.rmaForAdd.tray_ID;
+      this.trayForUpdate.tray_Item_Count = this.receivingForm.get('receive_QTY').value;
+      this.trayForUpdate.scrap_Count = 0;
+      this.trayForUpdate.current_Station_ID = 0;
+      this.trayForUpdate.station_Name = this.currentStation.station_Name;
+      this.trayForUpdate.pn = this.rmaForAdd.pn;
+      this.trayForUpdate.rma_No = this.rmaForAdd.rmano;
+      this.zebraService.updateTrayDetail(this.trayForUpdate).subscribe(next => {
+      }, error => {
+        this.alertify.error('Assign items to tray failed!');
+      });
+      this.receivingForm.reset();
+      this.isSearch = false;
+
+    }
+
   }
+
 
 }

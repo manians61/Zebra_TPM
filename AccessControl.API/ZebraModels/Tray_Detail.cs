@@ -21,5 +21,7 @@ namespace AccessControl.API.ZebraModels
         public string LastModifyBy { get; set; }
         public DateTime LastModifyDate { get; set; }
         public string Station_Name { get; set; }
+        public int Next_Station_ID{ get; set; }
+        public string Next_Station_Name { get; set; }
     }
 }

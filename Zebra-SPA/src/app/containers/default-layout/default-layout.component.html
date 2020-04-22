@@ -12,7 +12,7 @@
   </ul>
   <ul class="nav navbar-nav ml-auto">
     <li class="nav-item dropdown" dropdown placement="bottom right">
-      <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+      <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" *ngIf = "loggedIn()"
         dropdownToggle (click)="false">
         Welcome {{authService.decodedToken?.unique_name | titlecase}}
         <img src="assets/img/avatars/user.png" class="img-avatar" />

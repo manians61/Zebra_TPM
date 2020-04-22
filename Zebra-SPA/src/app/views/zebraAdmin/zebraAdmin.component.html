@@ -1,11 +1,4 @@
 <br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <div class="app-body ">
   <main class="main d-flex align-items-center">
     <div class="container">
@@ -21,7 +14,11 @@
                     <div class="col-lg-10">
                       <input type="text" class="form-control"
                         [ngClass]="{'is-invalid': adminForm.get('tray_ID').errors && adminForm.get('tray_ID').touched}"
-                        formControlName="tray_ID" placeholder="Tray ID" required>
+                        formControlName="tray_ID" placeholder="Tray ID">
+                        <div class="invalid-feedback"
+                        *ngIf="adminForm.get('tray_ID').touched && adminForm.get('tray_ID').hasError('required')">
+                        Tray ID is
+                        required</div>
                     </div>
                     <div class="col-lg-2">
                       <button class="btn btn-success" type="submit" style="width: 100%;"
@@ -40,14 +37,24 @@
                 <div class="form-group" *ngIf="isSearch">
                   <strong>Tray Qty:</strong>
                   <br>
-                  <input class="form-control" placeholder="Tray Qty" formControlName="tray_Qty"
-                     required>
+                  <input
+                    [ngClass]="{'is-invalid': adminForm.get('tray_Qty').errors && adminForm.get('tray_Qty').touched}"
+                    class="form-control" placeholder="Tray Qty" formControlName="tray_Qty">
+                  <div class="invalid-feedback"
+                    *ngIf="adminForm.get('tray_Qty').touched && adminForm.get('tray_Qty').hasError('required')">
+                    Tray quantity is
+                    required</div>
                 </div>
                 <div class="form-group" *ngIf="isSearch">
                   <strong>Scrap Qty:</strong>
                   <br>
-                  <input class="form-control" placeholder="Scrap Qty" formControlName="scrap_Qty"
-                   required>
+                  <input
+                    [ngClass]="{'is-invalid': adminForm.get('scrap_Qty').errors && adminForm.get('scrap_Qty').touched}"
+                    class="form-control" placeholder="Scrap Qty" formControlName="scrap_Qty">
+                  <div class="invalid-feedback"
+                    *ngIf="adminForm.get('scrap_Qty').touched && adminForm.get('scrap_Qty').hasError('required')">
+                    Scrap quantity is
+                    required</div>
                 </div>
                 <div class="form-group" *ngIf="isSearch">
                   <strong>Current Station. :</strong>

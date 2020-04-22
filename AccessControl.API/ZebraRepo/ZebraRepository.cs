@@ -31,11 +31,11 @@ namespace AccessControl.API.ZebraRepo
             base.DbConnection.Delete(user_ID);
         }
 
-        public async Task<List<Tray_Detail>> GetAvailableTray()
+        public async Task<List<string>> GetAvailableTray()
         {
-            string query = @"Select * From F034.Zebra_Tray_Detail WHERE IsEmpty = @isEmpty Order By Tray_ID ASC";
+            string query = @"Select Tray_ID From F034.Zebra_Tray_Detail WHERE IsEmpty = @isEmpty Order By Tray_ID ASC";
 
-            var result = await base.DbConnection.QueryAsync<Tray_Detail>(query, new
+            var result = await base.DbConnection.QueryAsync<string>(query, new
             {
                 @isEmpty = true,
 
@@ -65,7 +65,7 @@ namespace AccessControl.API.ZebraRepo
 
         public async Task<Tray_Detail> GetTrayDetail(string tray_ID)
         {
-            string query = @"select * From F034.Zebra_TPM_View WHERE tray_ID = @id";
+            string query = @"select Top(1) * From F034.Zebra_TPM_View WHERE tray_ID = @id ORDER BY LastModifyDate DESC";
             var result = await base.DbConnection.QueryFirstOrDefaultAsync<Tray_Detail>(query, new
             {
                 @id = tray_ID
@@ -123,14 +123,15 @@ namespace AccessControl.API.ZebraRepo
             //     newTray.LastModifyDate = DateTime.Now;
             //     base.DbConnection.Insert(newTray);
             // }
-       
+
             string query = @"UPDATE F034.Zebra_Tray_Detail 
             SET Scrap_Count = @number,
             LastModifyBy = @user_ID,
             LastModifyDate = @date,
             IsEmpty = @isEmpty,
             Tray_Item_Count = @tray_item_count,
-            Current_Station_ID = @station
+            Current_Station_ID = @station,
+            Next_Station_ID = @next_Station
             WHERE Tray_ID = @tray_ID; 
             INSERT INTO F034.Zebra_Transaction_Logs
             (Station_Name, Tray_ID, RMA_No, PN, Station_User_ID, Current_Item_Count,
@@ -143,7 +144,7 @@ namespace AccessControl.API.ZebraRepo
                 {
                     @number = detail.Scrap_Count,
                     @user_ID = detail.LastModifyBy,
-                    @tray_ID = detail.Tray_ID,
+                    @tray_ID = detail.Tray_ID.ToUpper(),
                     @date = DateTime.Now,
                     @isEmpty = detail.IsEmpty,
                     @tray_item_count = detail.Tray_Item_Count,
@@ -151,6 +152,7 @@ namespace AccessControl.API.ZebraRepo
                     @station_name = detail.Station_Name,
                     @rma = detail.RMA_No,
                     @pn = detail.PN,
+                    @next_station = detail.Next_Station_ID,
                     @current_count = detail.Current_Item_Count,
                     @station_user_ID = detail.LastModifyBy
                 });
@@ -227,5 +229,6 @@ namespace AccessControl.API.ZebraRepo
 
 
         }
+
     }
 }

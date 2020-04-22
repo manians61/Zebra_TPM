@@ -1,11 +1,4 @@
 <br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <div class="app-body ">
   <main class="main d-flex align-items-center">
     <div class="container">
@@ -24,6 +17,10 @@
                       <input type="text" class="form-control"
                         [ngClass]="{'is-invalid': stationDetailForm.get('tray_ID').errors && stationDetailForm.get('tray_ID').touched}"
                         formControlName="tray_ID" placeholder="Tray ID" required>
+                      <div class="invalid-feedback"
+                        *ngIf="stationDetailForm.get('tray_ID').touched && stationDetailForm.get('tray_ID').hasError('required')">
+                        Country is
+                        required</div>
                     </div>
                     <div class="col-lg-2">
                       <button class="btn btn-success" type="submit" style="width: 100%;" (click)="getTrayInfo()"
@@ -57,28 +54,32 @@
                       <br>
                       <input
                         [ngClass]="{'is-invalid': stationDetailForm.get('scrap_Qty').errors && stationDetailForm.get('scrap_Qty').touched}"
-                        class="form-control" placeholder="Scrap Qty" formControlName="scrap_Qty" required>
+                        class="form-control" placeholder="Scrap Qty" formControlName="scrap_Qty">
+                      <div class="invalid-feedback"
+                        *ngIf="stationDetailForm.get('scrap_Qty').touched && stationDetailForm.get('scrap_Qty').hasError('required')">
+                        Scrap quantity is
+                        required</div>
                     </div>
-                  
-                    <div class="form-group" *ngIf ="isLightOn">
+
+                    <div class="form-group" *ngIf="isLightOn">
                       <strong>Re-Assign tray_ID:</strong>
                       <br>
-                      <input [ngClass]="{'is-invalid': stationDetailForm.get('reassign_ID').errors && stationDetailForm.get('reassign_ID').touched}"
-                       class="form-control" placeholder="Re-Assign Tray ID." formControlName="reassign_ID" required>
+                      <input
+                        [ngClass]="{'is-invalid': stationDetailForm.get('reassign_ID').errors && stationDetailForm.get('reassign_ID').touched}"
+                        class="form-control" placeholder="Re-Assign Tray ID." formControlName="reassign_ID">
                     </div>
-                    <div class="form-group" *ngIf ="isLightOn">
-                      <strong>Re-Assign Qty:</strong>
-                      <br>
-                      <input [ngClass]="{'is-invalid': stationDetailForm.get('reassign_Qty').errors && stationDetailForm.get('reassign_Qty').touched}"
-                        class="form-control" placeholder="Re-Assign Qty" formControlName="reassign_Qty" required>
-                    </div>
+                    <div class="invalid-feedback"
+                      *ngIf="stationDetailForm.get('reassign_ID').touched && stationDetailForm.get('reassign_ID').hasError('required')">
+                      Re-Assign is
+                      required</div>
 
-                  </div>
-
-                  <div class="form-group text-center" *ngIf="isSearch">
-                    <button class="btn btn-success" type="submit" (click)="submitTrayDetail()">Submit</button>
                   </div>
                 </div>
+                <div class="form-group text-center" *ngIf="isSearch">
+                  <button class="btn btn-success" type="submit" (click)="submitTrayDetail()"
+                    [disabled]="isClick">Submit</button>
+                </div>
+
               </form>
             </div>
           </div>

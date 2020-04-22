@@ -13,4 +13,6 @@ export interface ZebraTray {
     current_Item_Count?: number;
     station_Name?: string;
     station_User_ID?: string;
+    next_Station_ID?: number;
+    next_Station_Name?: string;
 }

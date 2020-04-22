@@ -35,6 +35,7 @@ namespace AccessControl.API.Controllers
         [HttpPost("Login", Name = "Login")]
         public async Task<IActionResult> Login([FromBody]UserForLoginDto userForLoginDto)
         {
+            userForLoginDto.Login_Type = "local";
             int type = 0;
             switch (userForLoginDto.Login_Type.ToLower())
             {

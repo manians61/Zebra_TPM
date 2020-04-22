@@ -9,7 +9,7 @@ namespace AccessControl.API.ZebraRepo
          Task<List<RMA_Receiving>> GetRmaReceiving(string receiving);
          void AddReceiving(RMA_Receiving receivings);
          Task<Tray_Detail> GetTrayDetail(string tray_ID);
-         Task<List<Tray_Detail>> GetAvailableTray();
+         Task<List<string>> GetAvailableTray();
          Task<Zebra_Station> GetStation(int station_ID);
          Task<List<Zebra_Station>> GetStations();
  
@@ -23,5 +23,6 @@ namespace AccessControl.API.ZebraRepo
          Task<bool> UpdateTrayDetail(Tray_Detail detail);
          void AddZebraLog(Tray_Detail detail);
          void UpdateStation(Zebra_Station station);
+
     }
 }

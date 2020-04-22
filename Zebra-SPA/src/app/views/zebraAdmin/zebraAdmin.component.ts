@@ -34,6 +34,9 @@ export class ZebraAdminComponent implements OnInit {
     this.zebraService.getTrayInfo(this.adminForm.get('tray_ID').value).subscribe((res: ZebraTray) => {
       this.trayDetail = res;
       this.isSearch = true;
+      if (this.trayDetail.isEmpty) {
+        this.alertify.warning('This tray is Empty!', 3);
+      }
       this.adminForm.controls.tray_Qty.setValue(this.trayDetail.tray_Item_Count.toString());
       this.adminForm.controls.scrap_Qty.setValue(this.trayDetail.scrap_Count.toString());
     }, error => {
@@ -49,19 +52,24 @@ export class ZebraAdminComponent implements OnInit {
       this.trayDetail.isEmpty = true;
       this.zebraService.updateTrayDetail(this.trayDetail).subscribe(next => {
         this.alertify.success('Tray: ' + this.trayDetail.tray_ID + ' is close!');
+        this.trayDetail = null;
       });
     } else {
       this.trayDetail.isEmpty = false;
       this.trayDetail.tray_Item_Count = this.adminForm.get('tray_Qty').value;
       this.trayDetail.scrap_Count = this.adminForm.get('scrap_Qty').value;
-      this.trayDetail.current_Item_Count = this.trayDetail.tray_Item_Count - this.trayDetail.scrap_Count;
-      console.log(this.trayDetail);
-      this.zebraService.updateTrayDetail(this.trayDetail).subscribe(next => {
+      if (this.trayDetail.scrap_Count >= this.trayDetail.tray_Item_Count) {
+        this.alertify.error('Scrap number is greater than tray quantity');
+      } else {
+        this.trayDetail.current_Item_Count = this.trayDetail.tray_Item_Count - this.trayDetail.scrap_Count;
+        console.log(this.trayDetail);
+        this.zebraService.updateTrayDetail(this.trayDetail).subscribe(next => {
 
-        this.alertify.success('Update Successfully!');
-      }, error => {
-        this.alertify.error('Update Failed!');
-      });
+          this.alertify.success('Update Successfully!');
+        }, error => {
+          this.alertify.error('Update Failed!');
+        });
+      }
     }
     this.isSearch = false;
   }
