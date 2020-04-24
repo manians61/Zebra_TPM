@@ -8,7 +8,7 @@ export interface ZebraTray {
     scrap_Count?: number;
     lastModifyBy?: string;
     lastModifyDate?: Date;
-    rma_No?: string;
+    rmA_No?: string;
     pn?: string;
     current_Item_Count?: number;
     station_Name?: string;

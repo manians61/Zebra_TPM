@@ -28,17 +28,21 @@ export class ZebraAdminComponent implements OnInit {
       tray_Qty: ['', Validators.required],
       isClose: [false],
       scrap_Qty: ['', Validators.required]
-    });
+    }, { validator: [this.quantityValidator, this.trayValidator] });
   }
   getTrayInfo() {
     this.zebraService.getTrayInfo(this.adminForm.get('tray_ID').value).subscribe((res: ZebraTray) => {
       this.trayDetail = res;
       this.isSearch = true;
+      this.adminForm.controls.isClose.setValue(this.trayDetail.isEmpty);
       if (this.trayDetail.isEmpty) {
+        this.trayDetail = null;
         this.alertify.warning('This tray is Empty!', 3);
+      } else {
+        this.adminForm.controls.tray_Qty.setValue(this.trayDetail.tray_Item_Count);
+        this.adminForm.controls.scrap_Qty.setValue(this.trayDetail.scrap_Count);
       }
-      this.adminForm.controls.tray_Qty.setValue(this.trayDetail.tray_Item_Count.toString());
-      this.adminForm.controls.scrap_Qty.setValue(this.trayDetail.scrap_Count.toString());
+
     }, error => {
       this.alertify.error('Can not find this tray ID!');
       this.isSearch = false;
@@ -72,5 +76,24 @@ export class ZebraAdminComponent implements OnInit {
       }
     }
     this.isSearch = false;
+    this.adminForm.reset();
+  }
+  trayValidator(g: FormGroup) {
+    if (g.get('tray_Qty').value < 0 || g.get('tray_Qty').value > 14) {
+      return { 'trayBadNumber': true };
+    } else {
+      return null;
+    }
+  }
+  quantityValidator(g: FormGroup) {
+    if (g.get('scrap_Qty').value < 0 || g.get('scrap_Qty').value > 14 || g.get('scrap_Qty').value > g.get('tray_Qty').value) {
+      return { 'badNumber': true };
+    } else {
+      return null;
+    }
+  }
+  cancel() {
+    this.isSearch = false;
+    this.adminForm.reset();
   }
 }

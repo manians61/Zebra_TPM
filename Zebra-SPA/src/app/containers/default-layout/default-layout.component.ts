@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { navItems } from '../../_nav';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../../../_service/auth.service';
@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../../../../_service/user.service';
 import { PermissionGroup } from '../../../../_models/permissionGroup';
 import { User } from '../../../../_models/user';
+import { INavData } from '@coreui/angular';
 
 
 @Component({
@@ -16,6 +17,7 @@ import { User } from '../../../../_models/user';
 export class DefaultLayoutComponent implements OnInit {
   loginForm: FormGroup;
   model: any = {};
+  adminItem: INavData = {};
   currentUser: User;
   isAdmin = false;
   permissionGroup: PermissionGroup[];
@@ -23,7 +25,8 @@ export class DefaultLayoutComponent implements OnInit {
   public sidebarMinimized = false;
   public navItems = navItems;
   constructor(public authService: AuthService, private alertify: AlertifyService,
-    private router: Router, private fb: FormBuilder, private userService: UserService) { }
+    private router: Router, private fb: FormBuilder, private userService: UserService,
+    private changeDetectorRefs: ChangeDetectorRef) { }
   ngOnInit(): void {
 
     this.createLoginForm();

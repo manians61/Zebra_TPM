@@ -32,7 +32,7 @@ export class StationComponent implements OnInit {
   }
 
   getStation() {
-    this.zebraService.getStations().subscribe((sts: ZebraStation[]) => {
+    this.zebraService.getOpenStations().subscribe((sts: ZebraStation[]) => {
       this.stations = sts;
     }, error => {
       this.alertify.error('Can not get stations from Database!');
@@ -72,6 +72,12 @@ export class StationComponent implements OnInit {
       localStorage.setItem('userStation', JSON.stringify(this.currentStation));
       if (Number(this.stationUser.user_Station_ID) === 0) {
         this.router.navigate(['Receiving']);
+      }
+      else if (Number(this.stationUser.user_Station_ID) === 5) {
+        this.router.navigate(['lightOn']);
+      }
+      else if (Number(this.stationUser.user_Station_ID) === 7) {
+        this.router.navigate(['packing']);
       } else {
         this.router.navigate(['stationDetail']);
       }

@@ -1,19 +1,17 @@
-<app-header>
+<app-header [fixed]="true"
+  [navbarBrandFull]="{src: 'assets/img/brand/zebra_temp.png', width: 89, height: 25, alt: 'CoreUI Logo'}"
+  [navbarBrandMinimized]="{src: 'assets/img/brand/zebra_temp.png', width: 50, height: 100, alt: 'CoreUI Logo'}"
+  [sidebarToggler]="'lg'" [asideMenuToggler]="'lg'">
+
   <ul class="nav navbar-nav d-md-down-none">
     <li class="nav-item px-3">
-      <a class="nav-link" [routerLink]="['/station']">Station Login</a>
-    </li>
-    <li class="nav-item px-3" *ngIf="isAdmin">
-      <a class="nav-link" [routerLink]="['/zebraAdmin']">Tray Info Management</a>
-    </li>
-    <li class="nav-item px-3" *ngIf='isAdmin'>
-      <a class="nav-link" [routerLink]="['/stationAdmin']">Station Management</a>
+      <a class="nav-link" [routerLink]="['/station']">Home</a>
     </li>
   </ul>
   <ul class="nav navbar-nav ml-auto">
     <li class="nav-item dropdown" dropdown placement="bottom right">
-      <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" *ngIf = "loggedIn()"
-        dropdownToggle (click)="false">
+      <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+        *ngIf="loggedIn()" dropdownToggle (click)="false">
         Welcome {{authService.decodedToken?.unique_name | titlecase}}
         <img src="assets/img/avatars/user.png" class="img-avatar" />
       </a>
@@ -27,48 +25,60 @@
     </li>
   </ul>
 </app-header>
+<div class="app-body">
+  <app-sidebar #appSidebar [fixed]="true" [display]="'lg'" [minimized]="sidebarMinimized"
+    (minimizedChange)="toggleMinimize($event)">
 
-<main class="main">
-  <!-- Breadcrumb -->
-  <!-- breaking change 'cui-breadcrumb' -->
-  <!-- <cui-breadcrumb> -->
-  <!-- Breadcrumb Menu-->
-  <!-- <li class="breadcrumb-menu d-md-down-none">
-        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-          <a class="btn" [routerLink]="['/dashboard']"><i class="icon-graph"></i> &nbsp;Dashboard</a>
-          <a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>
-        </div>
-      </li> -->
-  <!-- </cui-breadcrumb> -->
-  <!-- deprecation warning for 'app-breadcrumb' -->
-  <!--<ol class="breadcrumb">-->
-  <!--<app-breadcrumb></app-breadcrumb>-->
-  <!--&lt;!&ndash; Breadcrumb Menu&ndash;&gt;-->
-  <!--<li class="breadcrumb-menu d-md-down-none">-->
-  <!--<div class="btn-group" role="group" aria-label="Button group with nested dropdown">-->
-  <!--<a class="btn" href="#"><i class="icon-speech"></i></a>-->
-  <!--<a class="btn" [routerLink]="['/dashboard']"><i class="icon-graph"></i> &nbsp;Dashboard</a>-->
-  <!--<a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>-->
-  <!--</div>-->
-  <!--</li>-->
-  <!--</ol>-->
-  <div class="container-fluid">
-    <router-outlet></router-outlet>
-  </div><!-- /.container-fluid -->
-</main>
+    <ul class="list-group">
+      <li class="nav-item px-3">
+        <a class="nav-link" [routerLink]="['/station']">Station Login</a>
+      </li>
+      <li class="nav-item px-3" *ngIf="isAdmin">
+        <a class="nav-link" [routerLink]="['/zebraAdmin']">Tray Info Management</a>
+      </li>
+      <li class="nav-item px-3" *ngIf='isAdmin'>
+        <a class="nav-link" [routerLink]="['/stationAdmin']">Station Management</a>
+      </li>
+    </ul>
+
+    <!-- <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="appSidebar.minimized"></app-sidebar-nav> -->
+  </app-sidebar>
+  <!-- Main content -->
+  <main class="main">
+    <!-- Breadcrumb -->
+    <!-- breaking change 'cui-breadcrumb' -->
+    <!-- <cui-breadcrumb> -->
+    <!-- Breadcrumb Menu-->
+    <!-- <li class="breadcrumb-menu d-md-down-none">
+          <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+            <a class="btn" [routerLink]="['/dashboard']"><i class="icon-graph"></i> &nbsp;Dashboard</a>
+            <a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>
+          </div>
+        </li> -->
+    <!-- </cui-breadcrumb> -->
+    <!-- deprecation warning for 'app-breadcrumb' -->
+    <!--<ol class="breadcrumb">-->
+    <!--<app-breadcrumb></app-breadcrumb>-->
+    <!--&lt;!&ndash; Breadcrumb Menu&ndash;&gt;-->
+    <!--<li class="breadcrumb-menu d-md-down-none">-->
+    <!--<div class="btn-group" role="group" aria-label="Button group with nested dropdown">-->
+    <!--<a class="btn" href="#"><i class="icon-speech"></i></a>-->
+    <!--<a class="btn" [routerLink]="['/dashboard']"><i class="icon-graph"></i> &nbsp;Dashboard</a>-->
+    <!--<a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>-->
+    <!--</div>-->
+    <!--</li>-->
+    <!--</ol>-->
+    <div class="container-fluid">
+      <router-outlet></router-outlet>
+    </div><!-- /.container-fluid -->
+  </main>
+
+
+</div>
+
 <!-- <app-aside [fixed]="true" [display]="false" [ngClass]="'test'">
     <tabset>
       <tab>
       </tab>
     </tabset>
   </app-aside> -->
-<div class="app-body">
-  <!-- <app-sidebar #appSidebar [fixed]="true" [display]="'lg'" [minimized]="sidebarMinimized" (minimizedChange)="toggleMinimize($event)">
-      <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="appSidebar.minimized"></app-sidebar-nav>
-      <app-sidebar-minimizer></app-sidebar-minimizer>
-    </app-sidebar> -->
-  <!-- Main content -->
-
-
-
-</div>

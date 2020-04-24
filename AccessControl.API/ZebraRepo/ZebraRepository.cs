@@ -170,14 +170,29 @@ namespace AccessControl.API.ZebraRepo
         public void AddReceiving(RMA_Receiving receiving)
         {
             receiving.CreateDate = DateTime.Now;
-            base.DbConnection.Insert(receiving);
+            try
+            {
+                base.DbConnection.Insert(receiving);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+
         }
 
-        public async Task<List<Zebra_Station>> GetStations()
+        public async Task<List<Zebra_Station>> GetOpenStations()
         {
             var itemFromDb = await base.DbConnection.GetAllAsync<Zebra_Station>();
 
             return itemFromDb.Where(x => x.Station_Status == true).ToList();
+        }
+             public async Task<List<Zebra_Station>> GetStationsAll()
+        {
+            var itemFromDb = await base.DbConnection.GetAllAsync<Zebra_Station>();
+
+            return itemFromDb.ToList();
         }
         //unUse
         public void AddZebraLog(Tray_Detail detail)
@@ -211,7 +226,7 @@ namespace AccessControl.API.ZebraRepo
 
         public void UpdateStation(Zebra_Station station)
         {
-            string query = @"Update Admin.Zebra_Station SET Station_Status = @status, LastModifyBy = @lastby
+            string query = @"Update F034.Zebra_Station SET Station_Status = @status, LastModifyBy = @lastby
             WHERE Station_ID = @id";
             try
             {
@@ -230,5 +245,41 @@ namespace AccessControl.API.ZebraRepo
 
         }
 
+        public async Task<List<Tray_Detail>> getTrayInStation(int station_ID)
+        {
+            string query = @"select * From F034.Zebra_Tray_Detail WHERE Current_Station_ID = @id AND IsEmpty = @isEmpty";
+            var result = await base.DbConnection.QueryAsync<Tray_Detail>(query, new
+            {
+                @id = station_ID,
+                @isEmpty = false
+            });
+            return result.ToList();
+        }
+
+        public void UpdateDetails(List<Tray_Detail> details)
+        {
+            string query = @"Update F034.Zebra_Tray_Detail SET Current_Station_ID = @station_id, LastModifyBy = @lastby
+            WHERE Current_Station_ID = @id";
+            for (int i = 0; i < details.Count; i++)
+            {
+                details[i].LastModifyDate = DateTime.Now;
+                try
+                {
+                    base.DbConnection.Query(query, new
+                    {
+                        @station_id = details[i].Current_Station_ID,
+                        @lastby = details[i].LastModifyBy,
+                        @id = details[i].Current_Station_ID
+                    });
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+
+
+        }
     }
 }

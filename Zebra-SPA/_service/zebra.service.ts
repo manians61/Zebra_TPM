@@ -14,8 +14,12 @@ export class ZebraService {
   baseUrl = environment.apiUrl + 'zebra/';
   constructor(private http: HttpClient) { }
 
-  getStations(): Observable<ZebraStation[]> {
-    return this.http.get<ZebraStation[]>(this.baseUrl + 'getstations/');
+  getOpenStations(): Observable<ZebraStation[]> {
+    return this.http.get<ZebraStation[]>(this.baseUrl + 'getopenstations/');
+  }
+
+  getAlltations(): Observable<ZebraStation[]> {
+    return this.http.get<ZebraStation[]>(this.baseUrl + 'getallstations/');
   }
   updateZebraUser(user: ZebraUser) {
     return this.http.post(this.baseUrl + 'stationuser/', user);
@@ -26,9 +30,7 @@ export class ZebraService {
   getTrayInfo(id: string): Observable<ZebraTray> {
     return this.http.get<ZebraTray>(this.baseUrl + 'tray/' + id);
   }
-  updateTrayDetail(trayDetail: ZebraTray) {
-    return this.http.post(this.baseUrl + 'updatetray/', trayDetail);
-  }
+
   getRMAInfo(id: string): Observable<ZebraRma[]> {
     return this.http.get<ZebraRma[]>(this.baseUrl + 'rma/' + id);
   }
@@ -43,5 +45,15 @@ export class ZebraService {
   }
   getAvaliableTrayID(): Observable<string[]> {
     return this.http.get<string[]>(this.baseUrl + 'AvailableTray/');
+  }
+  getTrayInStation(id: string): Observable<ZebraTray[]> {
+    return this.http.get<ZebraTray[]>(this.baseUrl + 'trayinstation/' + id);
+  }
+  updateDetails(details: ZebraTray[]) {
+    return this.http.post(this.baseUrl + 'UpdateTrayList', details);
+  }
+  updateTrayDetail(trayDetail: ZebraTray) {
+    console.log('test');
+    return this.http.post(this.baseUrl + 'UpdateTrayInfo', trayDetail);
   }
 }

@@ -15,7 +15,7 @@
                       <input type="text" class="form-control"
                         [ngClass]="{'is-invalid': adminForm.get('tray_ID').errors && adminForm.get('tray_ID').touched}"
                         formControlName="tray_ID" placeholder="Tray ID">
-                        <div class="invalid-feedback"
+                      <div class="invalid-feedback"
                         *ngIf="adminForm.get('tray_ID').touched && adminForm.get('tray_ID').hasError('required')">
                         Tray ID is
                         required</div>
@@ -38,23 +38,31 @@
                   <strong>Tray Qty:</strong>
                   <br>
                   <input
-                    [ngClass]="{'is-invalid': adminForm.get('tray_Qty').errors && adminForm.get('tray_Qty').touched}"
+                    [ngClass]="{'is-invalid': adminForm.get('tray_Qty').errors && adminForm.get('tray_Qty').touched || adminForm.hasError('trayBadNumber') && adminForm.get('tray_Qty').touched}"
                     class="form-control" placeholder="Tray Qty" formControlName="tray_Qty">
                   <div class="invalid-feedback"
                     *ngIf="adminForm.get('tray_Qty').touched && adminForm.get('tray_Qty').hasError('required')">
                     Tray quantity is
                     required</div>
                 </div>
+                <div class="invalid-feedback"
+                  *ngIf="adminForm.hasError('trayBadNumber') && adminForm.get('tray_Qty').touched">
+                  Quantity must be between 0 - 14
+                </div>
                 <div class="form-group" *ngIf="isSearch">
                   <strong>Scrap Qty:</strong>
                   <br>
                   <input
-                    [ngClass]="{'is-invalid': adminForm.get('scrap_Qty').errors && adminForm.get('scrap_Qty').touched}"
+                    [ngClass]="{'is-invalid': adminForm.get('scrap_Qty').errors && adminForm.get('scrap_Qty').touched || adminForm.hasError('badNumber') && adminForm.get('scrap_Qty').touched}"
                     class="form-control" placeholder="Scrap Qty" formControlName="scrap_Qty">
                   <div class="invalid-feedback"
                     *ngIf="adminForm.get('scrap_Qty').touched && adminForm.get('scrap_Qty').hasError('required')">
                     Scrap quantity is
                     required</div>
+                  <div class="invalid-feedback"
+                    *ngIf="adminForm.hasError('badNumber') && adminForm.get('scrap_Qty').touched">
+                    Quantity must be greatrer than 0 and less than Tray item number
+                  </div>
                 </div>
                 <div class="form-group" *ngIf="isSearch">
                   <strong>Current Station. :</strong>
@@ -69,7 +77,7 @@
                   <p>{{trayDetail?.lastModifyDate}}</p>
                 </div>
                 <div class="form-group" *ngIf="isSearch">
-                  <strong>Close this tray:</strong>
+                  <strong>Is Close:</strong>
                   <select class="custom-select" formControlName="isClose">
                     <option [ngValue]="true">Yse</option>
                     <option [ngValue]="false" selected>No</option>

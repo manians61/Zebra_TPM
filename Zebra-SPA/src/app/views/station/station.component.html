@@ -16,7 +16,7 @@
 
                         <div class="mb-3">
                           <select class="custom-select" (change)="changeStation($event)" formControlName="station_ID">
-                            <option value="">Choose your Station</option>
+                            <option value="" disabled>Choose your Station</option>
                             <option *ngFor="let item of stations" value = "{{item.station_ID}}" [ngValue]="station_ID">{{item.station_Name}}</option>
                           </select>
           

@@ -14,6 +14,8 @@ import { StationDetailComponent } from './views/StationDetail/StationDetail.comp
 import { ZebraAdminComponent } from './views/zebraAdmin/zebraAdmin.component';
 import { StationAdminComponent } from './views/stationAdmin/stationAdmin.component';
 import { AuthGuard } from '../../_guard/auth.guard';
+import { LightOnComponent } from './views/lightOn/lightOn.component';
+import { PackingComponent } from './views/packing/packing.component';
 
 export const routes: Routes = [
   {
@@ -64,7 +66,16 @@ export const routes: Routes = [
       {
         path: 'stationAdmin',
         component: StationAdminComponent
+      },
+      {
+        path: 'lightOn',
+        component: LightOnComponent
+      },
+      {
+        path: 'packing',
+        component: PackingComponent
       }
+
     ]
   },
   { path: '**', component: P404Component }

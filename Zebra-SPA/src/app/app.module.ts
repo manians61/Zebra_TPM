@@ -53,6 +53,8 @@ import { StationDetailComponent } from './views/StationDetail/StationDetail.comp
 import { ZebraAdminComponent } from './views/zebraAdmin/zebraAdmin.component';
 import { StationAdminComponent } from './views/stationAdmin/stationAdmin.component';
 import { AuthGuard } from '../../_guard/auth.guard';
+import { LightOnComponent } from './views/lightOn/lightOn.component';
+import { PackingComponent } from './views/packing/packing.component';
 
 export function tokenGetterFunc() {
   return localStorage.getItem('token');
@@ -94,11 +96,13 @@ export function tokenGetterFunc() {
     StationComponent,
     StationDetailComponent,
     ZebraAdminComponent,
-    StationAdminComponent
+    StationAdminComponent,
+    LightOnComponent,
+    PackingComponent
   ],
   providers: [{
     provide: LocationStrategy,
-    useClass: PathLocationStrategy
+    useClass: HashLocationStrategy
   },
   AuthService,
   AlertifyService,

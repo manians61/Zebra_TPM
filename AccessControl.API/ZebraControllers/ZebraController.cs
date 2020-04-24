@@ -25,13 +25,13 @@ namespace AccessControl.API.ZebraControllers
             var itemFromRepo = await _repo.GetRmaReceiving(id);
 
 
-            if (itemFromRepo != null)
+            if (itemFromRepo == null || itemFromRepo.Count == 0)
             {
-                return Ok(itemFromRepo);
+                return BadRequest("Could not get RMA_No");
             }
             else
             {
-                return BadRequest("Could not get RMA_No");
+                return Ok(itemFromRepo);
             }
 
         }
@@ -41,6 +41,7 @@ namespace AccessControl.API.ZebraControllers
             var trayFromRepo = await _repo.GetTrayDetail(receiving.Tray_ID);
             if (trayFromRepo.IsEmpty)
             {
+                trayFromRepo.IsEmpty = false;
                 _repo.AddReceiving(receiving);
                 return NoContent();
             }
@@ -79,17 +80,21 @@ namespace AccessControl.API.ZebraControllers
                 return BadRequest("No Available tray");
             }
         }
-        [HttpPost("UpdateTray")]
+        [HttpPost]
+        [Route("UpdateTrayInfo")]
         public async Task<IActionResult> UpdateTrayDetail(Tray_Detail detail)
         {
             try
             {
-                if (detail.IsEmpty || (detail.Tray_Item_Count - detail.Scrap_Count <= 0) || detail.Next_Station_ID.ToString() == null)
+                if (detail.IsEmpty || (detail.Tray_Item_Count - detail.Scrap_Count == 0) || detail.Next_Station_ID.ToString() == null)
                 {
                     detail.IsEmpty = true;
                     detail.Scrap_Count = 0;
                     detail.Current_Station_ID = 0;
+                    detail.Next_Station_ID = 0;
                     detail.Tray_Item_Count = 0;
+                    detail.Current_Item_Count = 0;
+                    detail.Station_Name = detail.Station_Name + "-close";
                     await _repo.UpdateTrayDetail(detail);
                 }
                 else
@@ -105,18 +110,33 @@ namespace AccessControl.API.ZebraControllers
             }
         }
         [HttpGet]
-        [Route("getstations")]
+        [Route("getopenstations")]
         public async Task<IActionResult> getStations()
         {
-            var itemFromRepo = await _repo.GetStations();
+            var itemFromRepo = await _repo.GetOpenStations();
 
-            if (itemFromRepo != null)
+            if (itemFromRepo == null || itemFromRepo.Count == 0)
             {
-                return Ok(itemFromRepo);
+                return BadRequest("Can not get zebra stations!!");
             }
             else
             {
+                return Ok(itemFromRepo);
+            }
+        }
+        [HttpGet]
+        [Route("getallstations")]
+        public async Task<IActionResult> getStationsAll()
+        {
+            var itemFromRepo = await _repo.GetStationsAll();
+
+            if (itemFromRepo == null || itemFromRepo.Count == 0)
+            {
                 return BadRequest("Can not get zebra stations!!");
+            }
+            else
+            {
+                return Ok(itemFromRepo);
             }
         }
         [HttpGet]
@@ -139,7 +159,7 @@ namespace AccessControl.API.ZebraControllers
         [Route("tray/{id}")]
         public async Task<IActionResult> GetTray(string id)
         {
-     
+
             var itemFromRepo = await _repo.GetTrayDetail(id.ToUpper());
 
             if (itemFromRepo != null)
@@ -162,6 +182,30 @@ namespace AccessControl.API.ZebraControllers
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+        [HttpGet]
+        [Route("trayinstation/{id}")]
+        public async Task<IActionResult> GetTrayInStation(int id)
+        {
+
+            var itemFromRepo = await _repo.getTrayInStation(id);
+
+
+            return Ok(itemFromRepo);
+
+        }
+        [HttpPost("UpdateTrayList")]
+        public IActionResult UpdateTrayDetailList(List<Tray_Detail> detail)
+        {
+            if (detail.Count == 0 || detail == null)
+            {
+                return BadRequest("No Items");
+            }
+            else
+            {
+                _repo.UpdateDetails(detail);
+                return Ok();
             }
         }
 

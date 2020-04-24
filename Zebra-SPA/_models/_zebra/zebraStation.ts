@@ -3,4 +3,5 @@ export interface ZebraStation {
     station_Name?: string;
     station_Status?: boolean;
     lastModifyBy?: string;
+    next_Station_ID?: number;
 }

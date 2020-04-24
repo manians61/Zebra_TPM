@@ -22,15 +22,16 @@
                         required</div>
                     </div>
                     <div class="col-lg-2">
-                      <button class="btn btn-success" type="submit" style="width: 100%;"
+                      <button class="btn btn-success" type="submit" id='searchBtn' style="width: 100%;"
                         (click)="rmaInfo()">Enter</button>
                     </div>
                   </div>
 
                 </div>
                 <div class="form-group" *ngIf="isSearch">
-                  <select class="select-css" formControlName="pn">
-                    <option *ngFor="let item of rmaList" [ngValue]="item.pn">
+                  <select class="custom-select" formControlName="pn">
+                    <!-- <option value="" selected disabled>Choose Part No.</option> -->
+                    <option *ngFor="let item of rmaList">
                       {{item.pn}}
                     </option>
                   </select>
@@ -47,13 +48,16 @@
 
 
                 <div class="form-group" *ngIf="isSearch">
-                  <input
-                    [ngClass]="{'is-invalid': receivingForm.get('receive_QTY').errors && receivingForm.get('receive_QTY').touched}"
-                    class="form-control" placeholder="Qty" formControlName="receive_QTY">
+                  <input class="form-control" placeholder="Qty" formControlName="receive_QTY"
+                    [ngClass]="{'is-invalid': receivingForm.get('receive_QTY').errors && receivingForm.get('receive_QTY').touched || receivingForm.hasError('badNumber') && receivingForm.get('receive_QTY').touched}">
                   <div class="invalid-feedback"
                     *ngIf="receivingForm.get('receive_QTY').touched && receivingForm.get('receive_QTY').hasError('required')">
                     Receive quantity
-                    is required</div>
+                    is required
+                  </div>
+                  <div class="invalid-feedback" *ngIf="receivingForm.hasError('badNumber') && receivingForm.get('receive_QTY').touched">
+                    Quantity must between 0 - 14
+                  </div> 
                 </div>
 
                 <div class="form-group text-center" *ngIf="isSearch">

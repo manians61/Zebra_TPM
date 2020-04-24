@@ -1,0 +1,38 @@
+<br>
+<div class="app-body ">
+  <main class="main d-flex align-items-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 mx-auto">
+          <div class="card mx-4" style="width: 100%;">
+            <div class="card-body p-6">
+              <form [formGroup]="stationDetailForm">
+                <h2 class="text-center text-primary">{{currentStation.station_Name}}</h2>
+                <hr>
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-lg-10">
+
+                      <div class="row "></div>
+                      <input type="text" class="form-control"
+                        [ngClass]="{'is-invalid': stationDetailForm.get('tray_ID').errors && stationDetailForm.get('tray_ID').touched}"
+                        formControlName="tray_ID" placeholder="Tray ID" required>
+                      <div class="invalid-feedback"
+                        *ngIf="stationDetailForm.get('tray_ID').touched && stationDetailForm.get('tray_ID').hasError('required')">
+                        Tray ID
+                        required</div>
+                    </div>
+                    <div class="col-lg-2">
+                      <button class="btn btn-success" type="submit" style="width: 100%;" (click)="getTrayInfo()"
+                      [disabled]="!stationDetailForm.valid ">Enter</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

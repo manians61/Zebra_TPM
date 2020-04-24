@@ -11,8 +11,8 @@
                 <hr>
                 <div class="form-group">
                   <select class="custom-select" (change)="changeStation($event)" formControlName="station_ID">
-                    <option value="">Choose your Station</option>
-                    <option *ngFor="let item of stations" value = "{{item.station_ID}}" [ngValue]="station_ID">{{item.station_Name}}</option>
+                    <option value="" disabled>Choose your Station</option>
+                    <option *ngFor="let item of stations" value="{{item.station_ID}}">{{item.station_Name}}</option>
                   </select>
                 </div>
                 <div class="form-group">
@@ -23,7 +23,7 @@
                   </select>
                 </div>
                 <div class="form-group text-center">
-                  <button class="btn btn-success" type="submit" 
+                  <button class="btn btn-success" type="submit" [disabled]="!isChange"
                     (click)="submitChange()">Submit</button>
                 </div>
               </form>
