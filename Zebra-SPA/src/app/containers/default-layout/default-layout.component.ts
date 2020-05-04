@@ -39,6 +39,7 @@ export class DefaultLayoutComponent implements OnInit {
   }
   toggleMinimize(e) {
     this.sidebarMinimized = e;
+
   }
 
   createLoginForm() {

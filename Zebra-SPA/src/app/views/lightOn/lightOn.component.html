@@ -71,6 +71,27 @@
                     <input
                       class="form-control" placeholder="Re-Assign Tray ID." formControlName="reassign_ID">
                   </div>
+                  <div class="form-group" *ngIf="isSearch">
+                    <strong>Rubber lifting Qty:</strong>
+                    <br>
+                    <input
+                      [ngClass]="{'is-invalid': stationDetailForm.get('lifting_Qty').errors && stationDetailForm.get('lifting_Qty').touched || stationDetailForm.hasError('badNumber') && stationDetailForm.get('lifting_Qty').touched}"
+                      class="form-control" placeholder="Rubber lifting Qty" formControlName="lifting_Qty">
+                    <div class="invalid-feedback"
+                      *ngIf="stationDetailForm.get('lifting_Qty').touched && stationDetailForm.get('lifting_Qty').hasError('required')">
+                      Rubber lifting quantity is
+                      required</div>
+                    <div class="invalid-feedback"
+                      *ngIf="stationDetailForm.hasError('badNumber') && stationDetailForm.get('lifting_Qty').touched">
+                      Rubber lifting must greater than 0 and less than current item count in tray
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <strong>Rubber lifting tray_ID:</strong>
+                    <br>
+                    <input
+                      class="form-control" placeholder="Rubber lifting tray ID." formControlName="lifting_tray_ID">
+                  </div>
                 </div>
 
                 <div class="form-group text-center" *ngIf="isSearch">

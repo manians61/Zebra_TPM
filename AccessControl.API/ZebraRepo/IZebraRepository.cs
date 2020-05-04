@@ -26,5 +26,6 @@ namespace AccessControl.API.ZebraRepo
         void UpdateStation(Zebra_Station station);
         Task<List<Tray_Detail>> getTrayInStation(int station_ID);
         void UpdateDetails(List<Tray_Detail> details);
+        void InsertTray(List<string> tray_IDs);
     }
 }

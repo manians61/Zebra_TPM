@@ -15,4 +15,5 @@ export interface ZebraTray {
     station_User_ID?: string;
     next_Station_ID?: number;
     next_Station_Name?: string;
+    station_Scrap_Count?: number;
 }

@@ -39,7 +39,7 @@ namespace AccessControl.API.ZebraControllers
         public async Task<IActionResult> AddRmaReceiving(RMA_Receiving receiving)
         {
             var trayFromRepo = await _repo.GetTrayDetail(receiving.Tray_ID);
-            if (trayFromRepo.IsEmpty)
+            if (trayFromRepo.IsEmpty || trayFromRepo.PN == null || trayFromRepo.RMA_No == null)
             {
                 trayFromRepo.IsEmpty = false;
                 _repo.AddReceiving(receiving);
@@ -86,21 +86,9 @@ namespace AccessControl.API.ZebraControllers
         {
             try
             {
-                if (detail.IsEmpty || (detail.Tray_Item_Count - detail.Scrap_Count == 0) || detail.Next_Station_ID.ToString() == null)
-                {
-                    detail.IsEmpty = true;
-                    detail.Scrap_Count = 0;
-                    detail.Current_Station_ID = 0;
-                    detail.Next_Station_ID = 0;
-                    detail.Tray_Item_Count = 0;
-                    detail.Current_Item_Count = 0;
-                    detail.Station_Name = detail.Station_Name + "-close";
+              
                     await _repo.UpdateTrayDetail(detail);
-                }
-                else
-                {
-                    await _repo.UpdateTrayDetail(detail);
-                }
+                
 
                 return NoContent();
             }
@@ -207,6 +195,11 @@ namespace AccessControl.API.ZebraControllers
                 _repo.UpdateDetails(detail);
                 return Ok();
             }
+        }
+        [HttpPost("UploadTray")]
+        public IActionResult UploadTray(List<string>  ids){
+            _repo.InsertTray(ids);
+            return Ok();
         }
 
     }

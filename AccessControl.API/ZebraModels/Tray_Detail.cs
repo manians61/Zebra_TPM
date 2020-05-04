@@ -23,5 +23,6 @@ namespace AccessControl.API.ZebraModels
         public string Station_Name { get; set; }
         public int Next_Station_ID{ get; set; }
         public string Next_Station_Name { get; set; }
+        public int Station_Scrap_Count { get; set; }
     }
 }

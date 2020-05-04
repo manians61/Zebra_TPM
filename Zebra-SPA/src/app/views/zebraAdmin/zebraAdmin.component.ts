@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { of } from 'rxjs';
 import { ZebraTray } from '../../../../_models/_zebra/zebraTray';
+import { User } from '../../../../_models/user';
 
 @Component({
   selector: 'app-zebraAdmin',
@@ -14,12 +15,15 @@ import { ZebraTray } from '../../../../_models/_zebra/zebraTray';
 export class ZebraAdminComponent implements OnInit {
   trayDetail: ZebraTray = {};
   adminForm: FormGroup;
+  currentUser: User;
   isSearch = false;
   constructor(private zebraService: ZebraService, private alertify: AlertifyService, private http: HttpClient,
     private fb: FormBuilder, private changeDetectorRefs: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.createSearchForm();
+    this.currentUser = JSON.parse(localStorage.getItem('user'));
+
   }
 
   createSearchForm() {
@@ -52,6 +56,8 @@ export class ZebraAdminComponent implements OnInit {
     this.changeDetectorRefs.detectChanges();
   }
   modifyTray() {
+    this.trayDetail.lastModifyBy = this.currentUser.user_ID;
+    this.trayDetail.station_Name = 'Tray Info Management';
     if (this.adminForm.get('isClose').value === true) {
       this.trayDetail.isEmpty = true;
       this.zebraService.updateTrayDetail(this.trayDetail).subscribe(next => {
@@ -66,7 +72,6 @@ export class ZebraAdminComponent implements OnInit {
         this.alertify.error('Scrap number is greater than tray quantity');
       } else {
         this.trayDetail.current_Item_Count = this.trayDetail.tray_Item_Count - this.trayDetail.scrap_Count;
-        console.log(this.trayDetail);
         this.zebraService.updateTrayDetail(this.trayDetail).subscribe(next => {
 
           this.alertify.success('Update Successfully!');

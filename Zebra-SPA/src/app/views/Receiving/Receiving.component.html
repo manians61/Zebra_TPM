@@ -30,8 +30,8 @@
                 </div>
                 <div class="form-group" *ngIf="isSearch">
                   <select class="custom-select" formControlName="pn">
-                    <!-- <option value="" selected disabled>Choose Part No.</option> -->
-                    <option *ngFor="let item of rmaList">
+                    <option value="" selected disabled>Choose Part No.</option> 
+                    <option *ngFor="let item of rmaList" value = "{{item.pn}}" [ngValue]="pn">
                       {{item.pn}}
                     </option>
                   </select>
@@ -55,9 +55,10 @@
                     Receive quantity
                     is required
                   </div>
-                  <div class="invalid-feedback" *ngIf="receivingForm.hasError('badNumber') && receivingForm.get('receive_QTY').touched">
+                  <div class="invalid-feedback"
+                    *ngIf="receivingForm.hasError('badNumber') && receivingForm.get('receive_QTY').touched">
                     Quantity must between 0 - 14
-                  </div> 
+                  </div>
                 </div>
 
                 <div class="form-group text-center" *ngIf="isSearch">

@@ -48,7 +48,6 @@ export class StationDetailComponent implements OnInit {
     this.zebraService.getTrayInfo(this.stationDetailForm.get('tray_ID').value).subscribe((res: ZebraTray) => {
       this.currentTrayDetail = res;
       this.currentTrayDetail.lastModifyBy = this.currentUser.user_ID;
-      console.log(this.currentTrayDetail);
       if (this.currentTrayDetail.isEmpty) {
         this.alertify.error('This tray is empty!');
       } else {
@@ -77,12 +76,15 @@ export class StationDetailComponent implements OnInit {
       this.currentTrayDetail.current_Station_ID = this.currentStation.station_ID;
       this.currentTrayDetail.next_Station_ID = this.currentStation.next_Station_ID;
       this.currentTrayDetail.station_Name = this.currentStation.station_Name;
-      this.currentTrayDetail.scrap_Count += Number(this.stationDetailForm.get('scrap_Qty').value);
-      if (this.currentTrayDetail.tray_Item_Count === this.currentTrayDetail.scrap_Count) {
+      this.currentTrayDetail.station_Scrap_Count = this.stationDetailForm.get('scrap_Qty').value;
+      if (this.currentTrayDetail.tray_Item_Count === (this.currentTrayDetail.scrap_Count
+        + Number(this.stationDetailForm.get('scrap_Qty').value))) {
         this.currentTrayDetail.isEmpty = true;
         this.zebraService.updateTrayDetail(this.currentTrayDetail).subscribe(next => {
           this.alertify.success('0 item in this tray now, tray close success');
         });
+        this.isSearch = false;
+        this.stationDetailForm.reset();
       } else {
         this.currentTrayDetail.current_Item_Count = this.currentTrayDetail.tray_Item_Count - this.currentTrayDetail.scrap_Count;
         this.zebraService.updateTrayDetail(this.currentTrayDetail).subscribe(next => {

@@ -38,8 +38,6 @@ export class PackingComponent implements OnInit {
         if (this.trayDetail.next_Station_ID !== this.currentStation.station_ID) {
           this.alertify.error('This tray is in station: ' + this.trayDetail.next_Station_Name);
         } else {
-          this.stationDetailForm.controls.current_Qty.setValue(this.trayDetail.tray_Item_Count - this.trayDetail.scrap_Count);
-          console.log(res);
           this.trayDetail.isEmpty = true;
           this.trayDetail.current_Station_ID = this.currentStation.station_ID;
           this.trayDetail.next_Station_ID = 0;

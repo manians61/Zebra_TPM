@@ -34,7 +34,6 @@ import {
 } from '@coreui/angular';
 
 // Import routing module
-import { AppRoutingModule, routes } from './app.routing';
 
 // Import 3rd party components
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -55,6 +54,7 @@ import { StationAdminComponent } from './views/stationAdmin/stationAdmin.compone
 import { AuthGuard } from '../../_guard/auth.guard';
 import { LightOnComponent } from './views/lightOn/lightOn.component';
 import { PackingComponent } from './views/packing/packing.component';
+import { appRoutes } from './routes';
 
 export function tokenGetterFunc() {
   return localStorage.getItem('token');
@@ -63,7 +63,6 @@ export function tokenGetterFunc() {
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    AppRoutingModule,
     AppAsideModule,
     AppBreadcrumbModule.forRoot(),
     AppFooterModule,
@@ -75,7 +74,7 @@ export function tokenGetterFunc() {
     ChartsModule,
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(appRoutes),
     ReactiveFormsModule,
     JwtModule.forRoot({
       config: {
@@ -102,7 +101,7 @@ export function tokenGetterFunc() {
   ],
   providers: [{
     provide: LocationStrategy,
-    useClass: HashLocationStrategy
+    useClass: PathLocationStrategy
   },
   AuthService,
   AlertifyService,

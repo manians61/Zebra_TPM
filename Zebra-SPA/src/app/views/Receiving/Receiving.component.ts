@@ -36,7 +36,7 @@ export class ReceivingComponent implements OnInit {
   createReceivingForm() {
     this.receivingForm = this.fb.group({
       rmano: ['', Validators.required],
-      pn: ['', Validators.nullValidator],
+      pn: ['', Validators.required],
       receive_QTY: ['', Validators.required],
       tray_ID: ['', Validators.required]
     }, { validator: this.quantityValidator });
@@ -51,8 +51,8 @@ export class ReceivingComponent implements OnInit {
   rmaInfo() {
     this.zebraService.getRMAInfo(this.receivingForm.get('rmano').value).subscribe((res: ZebraRma[]) => {
       this.rmaList = res;
-      this.changeDetectorRefs.detectChanges();
       this.isSearch = true;
+      //this.changeDetectorRefs.detectChanges();
     }, error => {
       this.alertify.error('Can not get RMA infomation from server!!');
     });
@@ -61,6 +61,7 @@ export class ReceivingComponent implements OnInit {
     if (this.receivingForm.valid) {
       this.rmaForAdd = Object.assign({}, this.receivingForm.value);
       this.rmaForAdd.createBy = this.currentUser.user_ID;
+      this.rmaForAdd.pn = this.receivingForm.get('pn').value;
       this.zebraService.getTrayInfo(this.rmaForAdd.tray_ID).subscribe((res: ZebraTray) => {
         this.id = res;
         if (this.id.isEmpty) {
@@ -78,7 +79,7 @@ export class ReceivingComponent implements OnInit {
             this.zebraService.updateTrayDetail(this.trayForUpdate).subscribe(next => {
               this.receivingForm.reset();
               this.isSearch = false;
-              this.rmaList = null;
+              this.ngOnInit();
             }, error => {
               this.alertify.error('Assign items to tray failed!');
             });

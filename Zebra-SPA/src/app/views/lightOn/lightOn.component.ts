@@ -6,6 +6,7 @@ import { ZebraService } from '../../../../_service/zebra.service';
 import { ZebraTray } from '../../../../_models/_zebra/zebraTray';
 import { User } from '../../../../_models/user';
 import { ZebraStation } from '../../../../_models/_zebra/zebraStation';
+import { ZebraRma } from '../../../../_models/_zebra/ZebraRma';
 
 
 @Component({
@@ -17,9 +18,11 @@ export class LightOnComponent implements OnInit {
   stationDetailForm: FormGroup;
   currentTrayDetail: ZebraTray;
   reAssignTrayDetail: ZebraTray = {};
+  liftingTrayDetail: ZebraTray = {};
   validTray: ZebraTray = {};
   currentUser: User;
   isSearch = false;
+  rmaforAdd: ZebraRma = {};
   currentStation: ZebraStation;
   constructor(private alertify: AlertifyService, private fb: FormBuilder,
     private router: Router, private zebraService: ZebraService, private changeDetectorRefs: ChangeDetectorRef) { }
@@ -33,16 +36,17 @@ export class LightOnComponent implements OnInit {
   createlightOnForm() {
     this.stationDetailForm = this.fb.group({
       tray_ID: ['', Validators.required],
-      scrap_Qty: ['', Validators.required],
+      scrap_Qty: [0, Validators.required],
       current_Qty: [{ value: '', disabled: true }, Validators.required],
-      reassign_ID: []
+      reassign_ID: [],
+      lifting_Qty: [0, Validators.required],
+      lifting_tray_ID: []
     }, { validator: this.quantityValidator });
   }
   getTrayInfo() {
     this.zebraService.getTrayInfo(this.stationDetailForm.get('tray_ID').value).subscribe((res: ZebraTray) => {
       this.currentTrayDetail = res;
       this.currentTrayDetail.lastModifyBy = this.currentUser.user_ID;
-      console.log(this.currentTrayDetail);
       if (this.currentTrayDetail.isEmpty) {
         this.alertify.error('This tray is empty!');
       } else {
@@ -61,7 +65,6 @@ export class LightOnComponent implements OnInit {
 
   quantityValidator(g: FormGroup) {
     if (g.get('scrap_Qty').value < 0 || g.get('scrap_Qty').value > g.get('current_Qty').value) {
-      console.log(g.get('scrap_Qty').value);
       return { 'badNumber': true };
     } else {
       return null;
@@ -72,7 +75,7 @@ export class LightOnComponent implements OnInit {
       this.currentTrayDetail.current_Station_ID = this.currentStation.station_ID;
       this.currentTrayDetail.station_Name = this.currentStation.station_Name;
       this.currentTrayDetail.next_Station_ID = this.currentStation.next_Station_ID;
-      console.log(this.stationDetailForm.get('reassign_ID').value);
+
       if (this.stationDetailForm.get('scrap_Qty').value !== 0 &&
         (this.stationDetailForm.get('reassign_ID').value !== '' && this.stationDetailForm.get('reassign_ID').value !== null)) {
         this.currentTrayDetail.scrap_Count += Number(this.stationDetailForm.get('scrap_Qty').value);
@@ -82,18 +85,24 @@ export class LightOnComponent implements OnInit {
         this.reAssignTrayDetail.scrap_Count = 0;
         this.reAssignTrayDetail.current_Item_Count = this.reAssignTrayDetail.tray_Item_Count - 0;
         this.reAssignTrayDetail.current_Station_ID = 0;
-        console.log(this.currentTrayDetail.rmA_No);
         this.reAssignTrayDetail.rmA_No = this.currentTrayDetail.rmA_No;
         this.reAssignTrayDetail.pn = this.currentTrayDetail.pn;
         this.reAssignTrayDetail.station_Name = 'Re-Assign';
         this.reAssignTrayDetail.lastModifyBy = this.currentUser.user_ID;
+        this.rmaforAdd.createBy = this.reAssignTrayDetail.lastModifyBy;
+        this.rmaforAdd.pn = this.reAssignTrayDetail.pn;
+        this.rmaforAdd.rmano = this.reAssignTrayDetail.rmA_No;
+        this.rmaforAdd.receive_QTY = this.reAssignTrayDetail.tray_Item_Count;
+        this.rmaforAdd.tray_ID = this.reAssignTrayDetail.tray_ID;
         this.zebraService.getTrayInfo(this.reAssignTrayDetail.tray_ID).subscribe((res: ZebraTray) => {
           if (res.isEmpty) {
             this.zebraService.updateTrayDetail(this.reAssignTrayDetail).subscribe(next => {
+              console.log(this.reAssignTrayDetail);
               this.alertify.success('Items are re-assign to new tray ID: ' + this.reAssignTrayDetail.tray_ID);
             }, error => {
               this.alertify.error('Re-assign to tray: ' + this.reAssignTrayDetail.tray_ID + ' failed');
             });
+            console.log(this.rmaforAdd);
             if (this.currentTrayDetail.tray_Item_Count === this.currentTrayDetail.scrap_Count) {
               this.currentTrayDetail.isEmpty = true;
             } else {
@@ -107,6 +116,7 @@ export class LightOnComponent implements OnInit {
                 this.alertify.success('Tray update success, tray moves to next station');
               }
             });
+            this.zebraService.addRmaInfo(this.rmaforAdd).subscribe(() => { });
             this.stationDetailForm.reset();
             this.isSearch = false;
           } else {

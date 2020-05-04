@@ -58,32 +58,47 @@ export class StationAdminComponent implements OnInit {
       this.stationForUpload.lastModifyBy = this.currentUser.user_ID;
       this.stationForUpload.station_ID = this.stationForm.get('station_ID').value;
       this.stationForUpload.station_Status = this.stationForm.get('isClose').value;
-      console.log(this.stationForUpload.station_Status);
       this.zebraService.getTrayInStation(this.stationForm.get('station_ID').value).subscribe((res: ZebraTray[]) => {
         this.trayDetail = res;
         if (!this.stationForUpload.station_Status) {
-          console.log(!this.stationForUpload.station_Status);
           if (this.trayDetail.length !== 0) {
-            console.log(this.currentUser);
-            this.trayDetail.forEach(function (value) {
-              value.lastModifyBy = 'Admin';
+            this.zebraService.getStation(this.trayDetail[0].next_Station_ID.toString()).subscribe((st: ZebraStation) => {
+              this.trayDetail.forEach(function (value) {
+                value.current_Station_ID = value.next_Station_ID;
+                value.lastModifyBy = 'Admin';
+                value.next_Station_ID = st.next_Station_ID;
+              });
+              this.zebraService.updateDetails(this.trayDetail).subscribe(() => {
+
+                if (this.trayDetail.length > 0) {
+                  this.alertify.success(this.trayDetail.length + ' trays move to next station');
+                  this.zebraService.updateStation(this.stationForUpload).subscribe(next => {
+                    this.alertify.success('Station tatus change success');
+                    location.reload();
+                  }, error => {
+                    this.alertify.error('Failed');
+                  });
+                }
+              }, error => {
+                this.alertify.error('move tray failed');
+              });
             });
-            this.zebraService.updateDetails(this.trayDetail).subscribe(() => {
-              this.alertify.success(this.trayDetail.length + ' trays move to next station');
+          } else {
+            this.zebraService.updateStation(this.stationForUpload).subscribe(next => {
+              this.alertify.success('Station tatus change success');
+              location.reload();
             }, error => {
-              this.alertify.error('move tray failed');
+              this.alertify.error('Failed');
             });
           }
         } else {
           this.zebraService.updateStation(this.stationForUpload).subscribe(next => {
             this.alertify.success('Station tatus change success');
+            location.reload();
           }, error => {
             this.alertify.error('Failed');
           });
         }
-
-
-
       });
 
     }
